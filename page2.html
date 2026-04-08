@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты теста</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ПОЛНОЕ МЕНЮ (скопировано из index.html) -->
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Логотип" id="logo-img">
+            <span>Вайб-Тест</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="page1.html">О тесте</a></li>
+                <li><a href="page2.html">Результаты</a></li>
+                <li><a href="page3.html">Отзывы</a></li>
+                <li><a href="page4.html">Статистика</a></li>
+                <li><a href="page5.html">FAQ</a></li>
+                <li><a href="page6.html">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Твои результаты</h1>
+            <div id="detailedResult"></div>
+            <button onclick="location.href='index.html'">🎯 Пройти тест снова</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Вайб-Тест. Все вопросы вымышленные, совпадения случайны.</p>
+    </footer>
+
+    <script>
+        const lastVibe = localStorage.getItem('lastVibe');
+        const scoresJSON = localStorage.getItem('lastScores');
+        const tiedVibesJSON = localStorage.getItem('lastTiedVibes');
+        const resultImage = localStorage.getItem('lastResultImage');
+        const resultDescription = localStorage.getItem('lastResultDescription');
+        
+        if (lastVibe && scoresJSON) {
+            const scores = JSON.parse(scoresJSON);
+            const tiedVibes = tiedVibesJSON ? JSON.parse(tiedVibesJSON) : [];
+            
+            let html = `
+                <div style="text-align: center;">
+                    <img src="${resultImage || 'images/result_default.jpg'}" alt="${lastVibe}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; margin: 20px 0; border: 5px solid #764ba2;">
+                    <h2>Твой главный вайб: ${lastVibe}</h2>
+                    <p style="font-size: 18px; margin: 20px;">${resultDescription || 'Ты уникален!'}</p>
+            `;
+            
+            if (tiedVibes.length > 1) {
+                html += `<p><strong>🎭 Была ничья между:</strong> ${tiedVibes.join(', ')}</p>`;
+                html += `<p>Решающий вопрос выбрал <strong>${lastVibe}</strong> как победителя.</p>`;
+            }
+            
+            html += `<h3>📊 Распределение голосов:</h3><ul>`;
+            for (let vibe in scores) {
+                html += `<li>${vibe}: ${scores[vibe]} голосов</li>`;
+            }
+            html += `</ul></div>`;
+            
+            document.getElementById('detailedResult').innerHTML = html;
+        } else {
+            document.getElementById('detailedResult').innerHTML = '<p>Ты ещё не проходил тест. <a href="index.html">Пройти сейчас</a></p>';
+        }
+    </script>
+</body>
+</html>
